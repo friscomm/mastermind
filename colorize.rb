@@ -24,7 +24,7 @@ class String
     colorize(35)
   end
 
-  def light_blue
+  def cyan
     colorize(36)
   end
 
@@ -32,23 +32,23 @@ class String
     colorize(91)
   end
 
-  def pastel_green
+  def mint
     colorize(92)
   end
 
-  def pastel_yellow
+  def lemon
     colorize(93)
   end
 
-  def pastel_blue
+  def azure
     colorize(94)
   end
 
-  def pastel_pink
+  def flamingo
     colorize(95)
   end
 
-  def pastel_light_blue
+  def sky
     colorize(96)
   end
 
