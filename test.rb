@@ -3,11 +3,28 @@ require_relative 'colorize'
 
 class Movement
 
-  attr_accessor :colors
+  attr_accessor :colors, :index, :mod_index, :stored_colors, :space
 
   def initialize
     self.colors = ['red_background', 'green_background', 'yellow_background', 'blue_background', 'magenta_background', 'cyan_background']
+    self.index = 0
+    self.stored_colors = [{color: nil} ,{color: nil} ,{color: nil} ,{color: nil} ,{color: nil} ,{color: nil} ]
+    self.space = 0
   end
+
+  def generate_color_line(arr)
+    holder = []
+    arr.each do |obj|
+      unless obj[:color].nil?
+        holder << marker_template.send(obj[:color])
+      end
+    end
+    holder.join(' ')
+  end
+
+  # def generate_color_line(arr)
+  #   arr.join(' ')
+  # end
 
   def clear_line
     print "\r\033[K"
@@ -31,44 +48,52 @@ class Movement
 
   def read_keypresses
     loop do
-      puts "the loop started over".red
       keypress = $stdin.getch
 
       if keypress == "\e" then
         keypress << STDIN.read_nonblock(3) rescue nil
       end
 
-      # if keypress == ?y
-      #   move_cursor_up(2)
-      #   clear_line
-      #   puts "whats happening?"
-      #   clear_line
-      # end
       cycle_colors(keypress)
-      puts "You typed:  #{keypress.inspect}".green
+      # print "You typed: #{keypress.inspect}".green
       break if keypress == ?\u0003 # || keypress == ?\r
       keypress
     end
   end
 
+  def mod_6(num)
+    num % 6
+  end
+
   def cycle_colors(keypress)
-    puts "here is the keypress: #{keypress.inspect}"
-    puts "CYCLE_COLORS WAS CALLED"
-    index = 0
+    color_index = mod_6(index)
     case keypress
     when "\e[A"
-      "up arrow for you!"
-      # move_cursor_left(3)
-      # index += 1
-      # puts "#{marker_template.colors[index]}"
+      clear_line
+      move_cursor_up
+      clear_line
+      @index += 1
+      puts "here is the index for up #{index}"
+      @stored_colors[mod_6(@space)][:color] = colors[color_index]
+      STDOUT.write "\r#{generate_color_line(@stored_colors)}"
+      # STDOUT.write "\r#{stored_colors.join(' ')}#{marker_template.send(colors[color_index])}"
     when "\e[B"
-      puts "you did it! down arrow"
-      # move_cursor_left(3)
-      # index -= 1
-      # puts "#{marker_template.colors[index]}"
-    when '\e[C'
-
-    when '\e[D'
+      clear_line
+      move_cursor_up
+      clear_line
+      @index -= 1
+      puts "here is the index for down #{index}"
+      @stored_colors[mod_6(@space)][:color] = colors[color_index]
+      STDOUT.write "\r#{generate_color_line(@stored_colors)}"
+      # STDOUT.write "\r#{stored_colors.join(' ')}#{marker_template.send(colors[color_index])}"
+    when "\e[C"
+      @stored_colors[mod_6(@space)] = marker_template.send(colors[color_index])
+      @space += 1
+      move_cursor_right(4)
+    when "\e[D"
+      @stored_colors[mod_6(@space)] = marker_template.send(colors[color_index])
+      @space -= 1
+      move_cursor_left(4)
     end
   end
 
