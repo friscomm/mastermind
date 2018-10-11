@@ -77,4 +77,8 @@ class String
     colorize(background: 46)
   end
 
+  def default_background
+    colorize(background: 49)
+  end 
+
 end
