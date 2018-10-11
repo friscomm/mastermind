@@ -51,6 +51,10 @@ class Movement
     num % 4
   end
 
+  def mod_6(num)
+    num % 6
+  end
+
   def print_line
     STDOUT.write line
   end
@@ -60,7 +64,7 @@ class Movement
   end
 
   def set_color
-    color_index = mod_4(@index)
+    color_index = mod_6(@index)
     space_index = mod_4(@space)
     @stored_colors[space_index][:color] = colors[color_index]
   end
