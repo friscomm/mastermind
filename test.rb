@@ -10,7 +10,7 @@ class Movement
     default = 'default_background'
     self.colors = ['red_background', 'green_background', 'yellow_background', 'blue_background', 'magenta_background', 'cyan_background']
     self.index = 0
-    self.stored_colors = [{color: default} ,{color: default} ,{color: default} ,{color: default} ,{color: default} ,{color: default} ]
+    self.stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
     self.space = 0
     self.marker_template = "   "
     # self.space_index = space % 6
@@ -47,8 +47,8 @@ class Movement
     end
   end
 
-  def mod_6(num)
-    num % 6
+  def mod_4(num)
+    num % 4
   end
 
   def print_line
@@ -60,8 +60,8 @@ class Movement
   end
 
   def set_color
-    color_index = mod_6(@index)
-    space_index = mod_6(@space)
+    color_index = mod_4(@index)
+    space_index = mod_4(@space)
     @stored_colors[space_index][:color] = colors[color_index]
   end
 
@@ -75,17 +75,17 @@ class Movement
     when "\e[A"
       @index += 1
       set_color
-      move_cursor_left_or_right((mod_6(@space)) * 5)
+      move_cursor_left_or_right((mod_4(@space)) * 5)
     when "\e[B"
       @index -= 1
       set_color
-      move_cursor_left_or_right((mod_6(@space)) * 5)
+      move_cursor_left_or_right((mod_4(@space)) * 5)
     when "\e[C"
       @space += 1
-      move_cursor_left_or_right((mod_6(@space)) * 5)
+      move_cursor_left_or_right((mod_4(@space)) * 5)
     when "\e[D"
       @space -= 1
-      move_cursor_left_or_right((mod_6(@space)) * 5)
+      move_cursor_left_or_right((mod_4(@space)) * 5)
     end
   end
 
