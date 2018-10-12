@@ -30,7 +30,7 @@ class SubmitCode
 
   def move_cursor_to(value)
     # puts " move_cursor_to(#{value})"
-    print "#{line}\e[#{value}G"
+    print "#{color_line}\e[#{value}G"
   end
 
   def read_keypresses
@@ -55,11 +55,9 @@ class SubmitCode
     num % 6
   end
 
-  def print_line
-    STDOUT.write line
-  end
 
-  def line
+
+  def color_line
     "\r#{generate_color_line(@stored_colors)}"
   end
 
@@ -93,6 +91,9 @@ class SubmitCode
     end
   end
 
+  # def print_line
+  #   STDOUT.write line
+  # end
   #
   # def show_cursor
   #     print "\e[?25h" # show cursor
