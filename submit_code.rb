@@ -1,19 +1,19 @@
 require 'io/console'
 require_relative 'colorize'
 
-class Movement
+class SubmitCode
 
-  attr_accessor :colors, :index, :stored_colors, :space, :marker_template
-  # attr_reader :space_index, :color_index
+  attr_accessor :colors, :color_index_base, :stored_colors, :position_base, :marker_template
+  # attr_reader :position, :color_index
 
   def initialize
     default = 'default_background'
     self.colors = ['red_background', 'green_background', 'yellow_background', 'blue_background', 'magenta_background', 'cyan_background']
-    self.index = 0
+    self.color_index_base = 0
     self.stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
-    self.space = 0
+    self.position_base = 0
     self.marker_template = "   "
-    # self.space_index = space % 6
+    # self.position = position_base % 4
     # self.color_index = index % 6
   end
 
@@ -28,8 +28,8 @@ class Movement
     holder.join('  ')
   end
 
-  def move_cursor_left_or_right(value)
-    # puts " move_cursor_left_or_right(#{value})"
+  def move_cursor_to(value)
+    # puts " move_cursor_to(#{value})"
     print "#{line}\e[#{value}G"
   end
 
@@ -64,32 +64,32 @@ class Movement
   end
 
   def set_color
-    color_index = mod_6(@index)
-    space_index = mod_4(@space)
-    @stored_colors[space_index][:color] = colors[color_index]
+    color_index = mod_6(@color_index_base)
+    position = mod_4(@position_base)
+    @stored_colors[position][:color] = colors[color_index]
   end
 
   def cycle_colors(keypress)
-    # for some reason these variables delay the cursor functionality so it takes two button presses in order to see the cursor move, and it is always one button press behind. possibly has something to do with the case statement
+    # for some reason these variables delay the cursor functionality so it takes two button presses in order to see the cursor move, and it is always one button press behind. possibly has something to do with the case statement getting the most up to date value for the variables when they're changed
 
-    # color_index = mod_6(@index)
-    # space_index = mod_6(@space)
-    # value = space_index * 5
+    # color_index = mod_6(@color_index_base)
+    # position = mod_4(@position_base)
+    # value = position * 5
     case keypress
     when "\e[A"
-      @index += 1
+      @color_index_base += 1
       set_color
-      move_cursor_left_or_right((mod_4(@space)) * 5)
+      move_cursor_to((mod_4(@position_base)) * 5)
     when "\e[B"
-      @index -= 1
+      @color_index_base -= 1
       set_color
-      move_cursor_left_or_right((mod_4(@space)) * 5)
+      move_cursor_to((mod_4(@position_base)) * 5)
     when "\e[C"
-      @space += 1
-      move_cursor_left_or_right((mod_4(@space)) * 5)
+      @position_base += 1
+      move_cursor_to((mod_4(@position_base)) * 5)
     when "\e[D"
-      @space -= 1
-      move_cursor_left_or_right((mod_4(@space)) * 5)
+      @position_base -= 1
+      move_cursor_to((mod_4(@position_base)) * 5)
     end
   end
 
