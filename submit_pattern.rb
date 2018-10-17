@@ -1,14 +1,14 @@
 require 'io/console'
 require_relative 'colorize'
 
-class SubmitCode
+class SubmitPattern
 
   attr_accessor :colors, :color_index_base, :stored_colors, :position_base, :marker_template
   # attr_reader :position, :color_index
 
   def initialize
     default = 'default_background'
-    self.colors = ['red_background', 'green_background', 'yellow_background', 'blue_background', 'magenta_background', 'cyan_background']
+    self.colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
     self.color_index_base = 0
     self.stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
     self.position_base = 0
@@ -30,7 +30,7 @@ class SubmitCode
 
   def move_cursor_to(value)
     # puts " move_cursor_to(#{value})"
-    print "#{line}\e[#{value}G"
+    print "#{color_line}\e[#{value}G"
   end
 
   def read_keypresses
@@ -55,11 +55,7 @@ class SubmitCode
     num % 6
   end
 
-  def print_line
-    STDOUT.write line
-  end
-
-  def line
+  def color_line
     "\r#{generate_color_line(@stored_colors)}"
   end
 
@@ -93,6 +89,9 @@ class SubmitCode
     end
   end
 
+  # def print_line
+  #   STDOUT.write line
+  # end
   #
   # def show_cursor
   #     print "\e[?25h" # show cursor

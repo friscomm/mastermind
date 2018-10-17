@@ -18,12 +18,7 @@ class Board
   end
 
   def show_board
-    puts
-    puts row_format(top_row)
-    puts "___________"
-    puts row_format(middle_row)
-    puts "___________"
-    puts row_format(bottom_row)
-    puts
+
   end
+
 end
