@@ -34,7 +34,9 @@ class SubmitPattern
     print "#{color_line}\e[#{value}G"
   end
 
-  def read_keypresses
+  def read_keypresses_maker
+    # reading = true
+    # while reading do
     loop do
       keypress = $stdin.getch
 
@@ -43,7 +45,40 @@ class SubmitPattern
       end
 
       cycle_colors(keypress)
-      break if keypress == ?\u0003 # || keypress == ?\r
+
+      if keypress == ?\u0003
+        break
+      elsif keypress == ?\r
+        print "\n"
+        hide_secret_pattern
+        break
+        # reading = false
+      end
+
+      keypress
+    end
+  end
+
+  def read_keypresses_breaker
+    # reading = true
+    # while reading do
+    loop do
+      keypress = $stdin.getch
+
+      if keypress == "\e" then
+        keypress << STDIN.read_nonblock(3) rescue nil
+      end
+
+      cycle_colors(keypress)
+
+      if keypress == ?\u0003
+        break
+      elsif keypress == ?\r
+        print "\n"
+        break
+        # reading = false
+      end
+
       keypress
     end
   end
@@ -90,6 +125,32 @@ class SubmitPattern
     end
   end
 
+  def hide_secret_pattern
+    i = 3
+    while i > 0
+      # STDOUT.write "\r Pattern will disappear in #{i}"
+      print "\rPattern will disappear in #{i}"
+      i-=1
+      sleep 1
+    end
+    clear_line
+    move_cursor_up
+    clear_line
+    puts "Secret pattern saved"
+  end
+
+  def clear_line
+    print "\r\033[K"
+  end
+
+  def move_cursor_up(n=1)
+    print "\033[#{n}A"
+  end
+
+  def move_cursor_down(n=1)
+    print "\033[#{n}B"
+  end
+
   # def print_line
   #   STDOUT.write line
   # end
@@ -102,24 +163,12 @@ class SubmitPattern
   #   print "\e[?25l" # hide cursor
   # end
   #
-  # def clear_line
-  #   print "\r\033[K"
-  # end
-  #
-  # def move_cursor_up(n=1)
-  #   print "\033[#{n}A"
-  # end
-  #
   # def move_cursor_right(n=1)
   #   print "\r#{generate_color_line(@stored_colors)}\033[#{n}C"
   # end
   #
   # def move_cursor_left(n=1)
   #   print "\r#{generate_color_line(@stored_colors)}\033[#{n}D"
-  # end
-  #
-  # def move_cursor_down(n=1)
-  #   print "\033[#{n}B"
   # end
   #
   # def pattern
