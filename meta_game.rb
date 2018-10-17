@@ -1,16 +1,17 @@
-# require_relative 'board'
+
 require_relative 'colorize'
 require_relative 'player'
 require_relative 'rules'
 require_relative 'game'
+require_relative 'board'
 
 class MetaGame
 
   attr_accessor :current_game, :number_of_games
 
   def initialize
-    self.current_game = 0
-    self.number_of_games = 0
+    @current_game = 0
+    @number_of_games = 0
   end
 
   def start_meta_game
@@ -37,7 +38,7 @@ class MetaGame
   end
 
   def next_game
-    puts "Moving to the next game!"
+    puts "Moving to the next game!".mint
     @current_game += 1
   end
 
@@ -48,7 +49,8 @@ class MetaGame
   def manage_games(p1, p2)
     while @current_game <= @number_of_games do
       puts "Loop just started over | current game #{@current_game}".green
-      game = Game.new(@current_game, p1, p2)
+      board = Board.new
+      game = Game.new(@current_game, p1, p2, board)
       game.start_game
       next_game
     end
