@@ -3,9 +3,9 @@ class Player
   attr_accessor :score, :name, :number
 
   def initialize(score=0, name=nil, number)
-    self.score = score
-    self.name = name
-    self.number = number
+    @score = score
+    @name = name
+    @number = number
   end
 
   def name_prompt
@@ -15,7 +15,7 @@ class Player
 
   def quick_show
     i = "here is the code"
-    10.times{ |i| STDOUT.write "\r#{i}"; sleep 1 } 
+    10.times{ |i| STDOUT.write "\r#{i}"; sleep 1 }
   end
 
 end

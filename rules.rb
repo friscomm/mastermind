@@ -10,7 +10,7 @@ class Rules
   #   end
   # end
 
-  def self.invalid_game_number?(number)
+  def self.invalid_number_of_games?(number)
     if number < 1
       puts "Please enter a number greater than 0".red
       true

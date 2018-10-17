@@ -7,11 +7,11 @@ class Game
   attr_accessor :current_game, :p1, :p2, :pattern_maker, :pattern_breaker
 
   def initialize(current_game, p1, p2)
-    self.current_game = current_game
-    self.pattern_maker = nil
-    self.pattern_breaker = nil
-    self.p1 = p1
-    self.p2 = p2
+    @current_game = current_game
+    @pattern_maker = nil
+    @pattern_breaker = nil
+    @p1 = p1
+    @p2 = p2
   end
 
   def print_entire_board

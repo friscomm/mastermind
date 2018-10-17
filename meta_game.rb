@@ -9,8 +9,8 @@ class MetaGame
   attr_accessor :current_game, :number_of_games
 
   def initialize
-    self.current_game = 0
-    self.number_of_games = 0
+    @current_game = 0
+    @number_of_games = 0
   end
 
   def start_meta_game

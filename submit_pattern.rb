@@ -3,16 +3,17 @@ require_relative 'colorize'
 
 class SubmitPattern
 
-  attr_accessor :colors, :color_index_base, :stored_colors, :position_base, :marker_template
-  # attr_reader :position, :color_index
+  attr_reader :colors  #:position, :color_index
+  attr_accessor :color_index_base, :stored_colors, :position_base, :marker_template
 
   def initialize
     default = 'default_background'
-    self.colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
-    self.color_index_base = 0
-    self.stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
-    self.position_base = 0
-    self.marker_template = "   "
+    @colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
+    # self.colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
+    @color_index_base = 0
+    @stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
+    @position_base = 0
+    @marker_template = "   "
     # self.position = position_base % 4
     # self.color_index = index % 6
   end
