@@ -79,6 +79,22 @@ class String
 
   def default_background
     colorize(background: 49)
-  end 
+  end
+
+  def salmon_background
+    colorize(background: 101)
+  end
+
+  def mint_background
+    colorize(background: 102)
+  end
+
+  def lemon_background
+    colorize(background: 103)
+  end
+
+  def azure_background
+    colorize(background: 104)
+  end
 
 end

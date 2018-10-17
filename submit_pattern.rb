@@ -1,14 +1,14 @@
 require 'io/console'
 require_relative 'colorize'
 
-class SubmitCode
+class SubmitPattern
 
   attr_accessor :colors, :color_index_base, :stored_colors, :position_base, :marker_template
   # attr_reader :position, :color_index
 
   def initialize
     default = 'default_background'
-    self.colors = ['red_background', 'green_background', 'yellow_background', 'blue_background', 'magenta_background', 'cyan_background']
+    self.colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
     self.color_index_base = 0
     self.stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
     self.position_base = 0
@@ -54,8 +54,6 @@ class SubmitCode
   def mod_6(num)
     num % 6
   end
-
-
 
   def color_line
     "\r#{generate_color_line(@stored_colors)}"
