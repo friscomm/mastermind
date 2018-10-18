@@ -18,16 +18,7 @@ class SubmitPattern
     # self.color_index = index % 6
   end
 
-  def generate_color_line(arr)
-    # puts "generate_color_line(#{arr})"
-    holder = []
-    arr.each do |obj|
-      unless obj[:color].nil?
-        holder << @marker_template.send(obj[:color])
-      end
-    end
-    holder.join('  ')
-  end
+
 
   def move_cursor_to(value)
     # puts " move_cursor_to(#{value})"
@@ -91,8 +82,19 @@ class SubmitPattern
     num % 6
   end
 
+  def generate_color_line(arr)
+    # puts "generate_color_line(#{arr})"
+    holder = []
+    arr.each do |obj|
+      unless obj[:color].nil?
+        holder << @marker_template.send(obj[:color])
+      end
+    end
+    holder.join('  ')
+  end
+
   def color_line
-    "\r#{generate_color_line(@stored_colors)}"
+    "\r\t#{generate_color_line(@stored_colors)}"
   end
 
   def set_color
@@ -111,17 +113,17 @@ class SubmitPattern
     when "\e[A"
       @color_index_base += 1
       set_color
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[B"
       @color_index_base -= 1
       set_color
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[C"
       @position_base += 1
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[D"
       @position_base -= 1
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     end
   end
 
