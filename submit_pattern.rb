@@ -4,39 +4,21 @@ require_relative 'colorize'
 class SubmitPattern
 
   attr_reader :colors  #:position, :color_index
-  attr_accessor :color_index_base, :stored_colors, :position_base, :marker_template
+  attr_accessor :color_index_base, :stored_colors, :position_base, :marker_template, :stored_feedback
 
   def initialize
     default = 'default_background'
     @colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
-    # self.colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
     @color_index_base = 0
     @stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
+    @stored_feedback = nil
     @position_base = 0
     @marker_template = "   "
     # self.position = position_base % 4
     # self.color_index = index % 6
   end
 
-  def generate_color_line(arr)
-    # puts "generate_color_line(#{arr})"
-    holder = []
-    arr.each do |obj|
-      unless obj[:color].nil?
-        holder << @marker_template.send(obj[:color])
-      end
-    end
-    holder.join('  ')
-  end
-
-  def move_cursor_to(value)
-    # puts " move_cursor_to(#{value})"
-    print "#{color_line}\e[#{value}G"
-  end
-
   def read_keypresses_maker
-    # reading = true
-    # while reading do
     loop do
       keypress = $stdin.getch
 
@@ -52,7 +34,6 @@ class SubmitPattern
         print "\n"
         hide_secret_pattern
         break
-        # reading = false
       end
 
       keypress
@@ -60,8 +41,6 @@ class SubmitPattern
   end
 
   def read_keypresses_breaker
-    # reading = true
-    # while reading do
     loop do
       keypress = $stdin.getch
 
@@ -76,9 +55,7 @@ class SubmitPattern
       elsif keypress == ?\r
         print "\n"
         break
-        # reading = false
       end
-
       keypress
     end
   end
@@ -91,8 +68,18 @@ class SubmitPattern
     num % 6
   end
 
+  def generate_color_line(arr)
+    holder = []
+    arr.each do |obj|
+      unless obj[:color].nil?
+        holder << @marker_template.send(obj[:color])
+      end
+    end
+    holder.join('  ')
+  end
+
   def color_line
-    "\r#{generate_color_line(@stored_colors)}"
+    "\r\t#{generate_color_line(@stored_colors)}"
   end
 
   def set_color
@@ -111,17 +98,17 @@ class SubmitPattern
     when "\e[A"
       @color_index_base += 1
       set_color
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[B"
       @color_index_base -= 1
       set_color
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[C"
       @position_base += 1
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     when "\e[D"
       @position_base -= 1
-      move_cursor_to((mod_4(@position_base)) * 5)
+      move_cursor_to(((mod_4(@position_base)) * 5) + 8)
     end
   end
 
@@ -139,8 +126,35 @@ class SubmitPattern
     puts "Secret pattern saved"
   end
 
+  def winning_guess?(guess, pattern)
+    if guess.join(',') == pattern.join(',')
+      puts "You WIN!".salmon
+      @turn_number = 12
+    end
+  end
+
+def tally_score(guess, pattern)
+  guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
+
+  guess.each_with_index do |color, i|
+    if pattern[i] == color
+      guess_feedback[:correct_position] += 1
+      guess_feedback[:non_matches] -= 1
+    elsif pattern[i] != color && pattern.include?(color)
+      guess_feedback[:correct_color] += 1
+      guess_feedback[:non_matches] -= 1
+    end
+  end
+  @stored_feedback = guess_feedback
+end
+
+
   def clear_line
     print "\r\033[K"
+  end
+
+  def move_cursor_to(value)
+    print "#{color_line}\e[#{value}G"
   end
 
   def move_cursor_up(n=1)
@@ -156,38 +170,12 @@ class SubmitPattern
   # end
   #
   # def show_cursor
-  #     print "\e[?25h" # show cursor
+  #   print "\e[?25h" # show cursor
   # end
   #
   # def hide_cursor
   #   print "\e[?25l" # hide cursor
   # end
-  #
-  # def move_cursor_right(n=1)
-  #   print "\r#{generate_color_line(@stored_colors)}\033[#{n}C"
-  # end
-  #
-  # def move_cursor_left(n=1)
-  #   print "\r#{generate_color_line(@stored_colors)}\033[#{n}D"
-  # end
-  #
-  # def pattern
-  #   [marker_template.green_background, marker_template.green_background, marker_template.cyan_background, marker_template.magenta_background]
-  # end
-  #
-  # def writing
-  #   print "Here is your secret pattern: "
-  #   puts "#{pattern.join("  ")}"
-  #   i = 3
-  #   while i > 0
-  #     # STDOUT.write "\r Pattern will disappear in #{i}"
-  #     print "\rPattern will disappear in #{i}"
-  #     i-=1
-  #     sleep 1
-  #   end
-  #   clear_line
-  #   move_cursor_up(1)
-  #   clear_line
-  # end
+
 
 end
