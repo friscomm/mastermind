@@ -15,9 +15,9 @@ class Game
     @pattern_maker = nil
     @pattern_breaker = nil
     @secret_pattern = nil
+    @guess_feedback = nil
     @turn_number = 0
     @most_recent_guess = ''
-    @guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
   end
 
   def set_roles
@@ -28,22 +28,6 @@ class Game
       @pattern_maker = p1.name
       @pattern_breaker = p2.name
     end
-  end
-
-  # def correct_guess?
-  #   guess = @board.rows.last[:guess]
-  #   pattern = @secret_pattern
-  #   if guess.join(',') == pattern.join(',')
-  #     puts "You WIN!".salmon
-  #     true
-  #   else
-  #     false
-  #   end
-  # end
-
-  def reset_score
-    @guess_feedback[:correct_position], @guess_feedback[:correct_color] = 0, 0
-    @guess_feedback[:non_matches] = 4
   end
 
   def tally_score
@@ -73,35 +57,32 @@ class Game
     @secret_pattern = s.stored_colors
   end
 
+  def set_feedback
+    s = SubmitPattern.new
+    s.tally_score(@most_recent_guess, @secret_pattern)
+    @guess_feedback = s.stored_feedback
+  end
+
   def guess_pattern
     puts "#{@pattern_breaker}, please guess the secret pattern using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
     s = SubmitPattern.new
     s.read_keypresses_breaker
     @most_recent_guess = s.stored_colors
-    # @board.rows << {turn_number: @turn_number, guess: s.stored_colors}
-    # puts "Here are the current values in the Board class: board.rows = #{@board.rows}"
   end
 
   def save_current_row
-    puts "save_current_row".blue
-    puts "value of @board.rows: #{@board.rows}".lemon
     @board.rows << {turn_number: @turn_number, guess: @most_recent_guess, guess_feedback: @guess_feedback}
-    puts "value of @board: #{@board.rows}".lemon
   end
 
   def turn
     guess_pattern
+    set_feedback
     # if correct_guess?
     #   @turn_number = 12
     # else
-      tally_score
+      # tally_score
       save_current_row
-      puts "Here are the current standings, correct_position: #{@guess_feedback[:correct_position]}, correct_color: #{@guess_feedback[:correct_color]}, non_matches: #{@guess_feedback[:non_matches]}".yellow
-
-      # @board.rows[@turn_number][:guess_feedback] = @guess_feedback
-      puts "lets see if that worked! #{@board.rows}"
       puts "PRINT THE ENTIRE BOARD with TURNS!! \n#{@board.print_entire_board}"
-      reset_score
     # end
     # puts "PRINT THE ENTIRE BOARD with TURNS!! \n#{@board.print_entire_board(@guess_feedback)}"
   end
