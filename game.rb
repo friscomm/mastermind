@@ -83,7 +83,10 @@ class Game
   end
 
   def save_current_row
+    puts "save_current_row".blue
+    puts "value of @board.rows: #{@board.rows}".lemon
     @board.rows << {turn_number: @turn_number, guess: @most_recent_guess, guess_feedback: @guess_feedback}
+    puts "value of @board: #{@board.rows}".lemon
   end
 
   def turn

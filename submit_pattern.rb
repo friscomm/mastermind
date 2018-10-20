@@ -51,8 +51,6 @@ class SubmitPattern
   end
 
   def read_keypresses_breaker
-    # reading = true
-    # while reading do
     loop do
       keypress = $stdin.getch
 
@@ -67,9 +65,7 @@ class SubmitPattern
       elsif keypress == ?\r
         print "\n"
         break
-        # reading = false
       end
-
       keypress
     end
   end
