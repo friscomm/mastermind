@@ -126,14 +126,14 @@ class SubmitPattern
     puts "Secret pattern saved"
   end
 
-  def winning_guess?(guess, pattern)
-    if guess.join(',') == pattern.join(',')
-      puts "You WIN!".salmon
-      @turn_number = 12
-    end
-  end
+  # def winning_guess?(guess, pattern)
+  #   if guess.join(',') == pattern.join(',')
+  #     puts "You WIN!".salmon
+  #     @turn_number = 12
+  #   end
+  # end
 
-def tally_score(guess, pattern)
+def generate_response(guess, pattern)
   guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
 
   guess.each_with_index do |color, i|

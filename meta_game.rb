@@ -48,7 +48,6 @@ class MetaGame
 
   def manage_games(p1, p2)
     while @current_game <= @number_of_games do
-      puts "Loop just started over | current game #{@current_game}".green
       board = Board.new
       game = Game.new(@current_game, p1, p2, board)
       game.start_game
