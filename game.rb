@@ -63,10 +63,20 @@ class Game
     @guess_feedback = s.stored_feedback
   end
 
+  def guess_pattern_message
+    if @turn_number == 1
+      puts "#{@pattern_breaker.name}, please guess the secret pattern using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
+    else
+      puts "#{@pattern_breaker.name}, please enter your guess:"
+    end
+  end
+
   def set_guess_pattern
-    puts "#{@pattern_breaker.name}, please guess the secret pattern using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
+    guess_pattern_message
     s = SubmitPattern.new
     s.read_keypresses_breaker
+    s.move_cursor_up
+    s.clear_line
     @most_recent_guess = s.stored_colors
   end
 
@@ -83,12 +93,22 @@ class Game
       # tally_score
       save_current_row
       puts "\n#{@board.print_entire_board}"
+      if winning_guess? && @turn_number != 12
+        print "#{@pattern_breaker.name} wins! ".mint
+        @turn_number = 12
+      elsif winning_guess? && @turn_number == 12
+        print "#{@pattern_breaker.name} wins! ".mint
+        @turn_number = 12
+        distribute_points
+      else
+        distribute_points
+      end
     # end
     # puts "PRINT THE ENTIRE BOARD with TURNS!! \n#{@board.print_entire_board(@guess_feedback)}"
   end
 
   def distribute_points
-    @codemaker.score += 1
+    @pattern_maker.score += 1
   end
 
   def winning_guess?
