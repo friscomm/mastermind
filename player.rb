@@ -13,9 +13,9 @@ class Player
     @name = gets.chomp
   end
 
-  def quick_show
-    i = "here is the code"
-    10.times{ |i| STDOUT.write "\r#{i}"; sleep 1 }
-  end
+  # def quick_show
+  #   i = "here is the code"
+  #   10.times{ |i| STDOUT.write "\r#{i}"; sleep 1 }
+  # end
 
 end

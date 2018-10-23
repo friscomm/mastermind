@@ -23,7 +23,7 @@ class Board
     holder.join('  ')
   end
 
-  def response_format(guess_feedback)
+  def feedback_format(guess_feedback)
     # puts "\nhere is the guess stuff I got: #{guess_feedback}".salmon
 
     color_num = guess_feedback[:correct_color]
@@ -33,20 +33,24 @@ class Board
     colors = [@correct_color_symbol] * color_num
     positions = [@correct_position_symbol] * position_num
     non_matches = [@non_matching_symbol] * non_matching_num
-    responses = colors + positions + non_matches
-    responses.join(" ")
+    feedback = colors + positions + non_matches
+    feedback.join(" ")
   end
 
   def color_line(turn_number, color_array, guess_feedback)
-    "\n\t#{turn_number} | #{generate_color_line(color_array)} || #{response_format(guess_feedback)}".cyan
+    "\n\t#{turn_number} | #{generate_color_line(color_array)} ||   #{feedback_format(guess_feedback)}".cyan
   end
 
   def print_entire_board
     entire_board = ""
     @rows.each do |color_obj|
-      STDOUT.write color_line(color_obj[:turn_number], color_obj[:guess], color_obj[:guess_feedback])
-      STDOUT.write "\n\t --------------------------------------------".cyan
+      entire_board += color_line(color_obj[:turn_number], color_obj[:guess], color_obj[:guess_feedback])
+      entire_board += "\n\t -----------------------------------".cyan
+      # STDOUT.write color_line(color_obj[:turn_number], color_obj[:guess], color_obj[:guess_feedback])
+      # STDOUT.write "\n\t -----------------------------------".cyan
     end
+    print entire_board
+    # STDOUT.write entire_board
   end
 
 end
