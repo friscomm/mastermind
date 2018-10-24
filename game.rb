@@ -19,6 +19,12 @@ class Game
     @most_recent_guess = ''
   end
 
+  def start_game
+    set_roles
+    set_secret_pattern
+    start_turns
+  end
+
   def set_roles
     if @current_game.even?
       @pattern_maker = p2
@@ -42,14 +48,6 @@ class Game
     @guess_feedback = s.stored_feedback
   end
 
-  def guess_pattern_message
-    if @turn_number == 1
-      puts "#{@pattern_breaker.name}, please guess the secret pattern using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
-    else
-      puts "#{@pattern_breaker.name}, please enter your guess:"
-    end
-  end
-
   def set_guess_pattern
     guess_pattern_message
     s = SubmitPattern.new
@@ -59,8 +57,23 @@ class Game
     @most_recent_guess = s.stored_colors
   end
 
+  def guess_pattern_message
+    if @turn_number == 1
+      puts "#{@pattern_breaker.name}, please guess the secret pattern using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
+    else
+      puts "#{@pattern_breaker.name}, please enter your guess:"
+    end
+  end
+
   def save_current_row
     @board.rows << {turn_number: @turn_number, guess: @most_recent_guess, guess_feedback: @guess_feedback}
+  end
+
+  def start_turns
+    while @turn_number <= 12
+      turn
+      @turn_number += 1
+    end
   end
 
   def turn
@@ -88,19 +101,6 @@ class Game
     else
       false
     end
-  end
-
-  def start_turns
-    while @turn_number <= 12
-      turn
-      @turn_number += 1
-    end
-  end
-
-  def start_game
-    set_roles
-    set_secret_pattern
-    start_turns
   end
 
 end

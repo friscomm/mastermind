@@ -14,19 +14,4 @@ class Rules
     end
   end
 
-  def self.is_number?(item)
-    if item.to_i == 0
-      false
-    else
-      true
-    end
-  end
-
-  def self.valid_number?(number)
-    if number < 1 || number > 100
-      false
-    else
-      true
-    end
-  end
 end

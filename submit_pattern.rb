@@ -10,9 +10,9 @@ class SubmitPattern
     default = 'default_background'
     @colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
     @color_index_base = 0
+    @position_base = 0
     @stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
     @stored_feedback = nil
-    @position_base = 0
     @marker_template = "   "
     # self.position = position_base % 4
     # self.color_index = index % 6
@@ -68,7 +68,7 @@ class SubmitPattern
     num % 6
   end
 
-  def generate_color_line(arr)
+  def generate_color_line_string(arr)
     holder = []
     arr.each do |obj|
       unless obj[:color].nil?
@@ -78,8 +78,8 @@ class SubmitPattern
     holder.join('  ')
   end
 
-  def color_line
-    "\r\t#{generate_color_line(@stored_colors)}"
+  def formatted_color_line
+    "\r\t#{generate_color_line_string(@stored_colors)}"
   end
 
   def set_color
@@ -145,15 +145,11 @@ class SubmitPattern
   end
 
   def move_cursor_to(value)
-    print "#{color_line}\e[#{value}G"
+    print "#{formatted_color_line}\e[#{value}G"
   end
 
   def move_cursor_up(n=1)
     print "\033[#{n}A"
   end
 
-  def move_cursor_down(n=1)
-    print "\033[#{n}B"
-  end
-  
 end
