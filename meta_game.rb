@@ -88,8 +88,20 @@ class MetaGame
     end
   end
 
+  def tie_game?(p1,p2)
+    if p1.score == p2.score
+      true
+    else
+      false
+    end
+  end
+
   def game_over(p1,p2)
-    puts "#{get_winner(p1,p2)} wins!".mint
+    if tie_game?(p1,p2)
+      puts "Tie game....Everybody wins!".mint
+    else
+      puts "#{get_winner(p1,p2)} wins!".mint
+    end
   end
 
   def current_score(p1, p2)
