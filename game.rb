@@ -1,4 +1,3 @@
-# require_relative 'board'
 require_relative 'colorize'
 require_relative 'player'
 require_relative 'submit_pattern'
@@ -29,26 +28,6 @@ class Game
       @pattern_breaker = p2
     end
   end
-
-  # def generate_response
-  #   guess = @most_recent_guess
-  #   pattern = @secret_pattern
-  #
-  #   if guess.join(',') == pattern.join(',')
-  #     puts "You WIN!".salmon
-  #     @turn_number = 12
-  #   end
-  #
-  #   guess.each_with_index do |color, i|
-  #     if pattern[i] == color
-  #       @guess_feedback[:correct_position] += 1
-  #       @guess_feedback[:non_matches] -= 1
-  #     elsif pattern[i] != color && pattern.include?(color)
-  #       @guess_feedback[:correct_color] += 1
-  #       @guess_feedback[:non_matches] -= 1
-  #     end
-  #   end
-  # end
 
   def set_secret_pattern
     puts "#{@pattern_maker.name}, please create a secret pattern below using the left/right arrow keys to move between spaces and up/down arrow keys to change colors"
@@ -87,24 +66,16 @@ class Game
   def turn
     set_guess_pattern
     set_feedback
-    # if correct_guess?
-    #   @turn_number = 12
-    # else
-      # tally_score
-      save_current_row
-      puts "\n#{@board.print_entire_board}"
-      if winning_guess? && @turn_number != 12
-        print "#{@pattern_breaker.name} wins! ".mint
-        @turn_number = 12
-      elsif winning_guess? && @turn_number == 12
-        print "#{@pattern_breaker.name} wins! ".mint
-        @turn_number = 12
-        distribute_points
-      else
-        distribute_points
-      end
-    # end
-    # puts "PRINT THE ENTIRE BOARD with TURNS!! \n#{@board.print_entire_board(@guess_feedback)}"
+    save_current_row
+    puts "\n#{@board.print_entire_board}"
+    if winning_guess? && @turn_number != 12
+      @turn_number = 12
+    elsif winning_guess? && @turn_number == 12
+      @turn_number = 12
+      distribute_points
+    else
+      distribute_points
+    end
   end
 
   def distribute_points

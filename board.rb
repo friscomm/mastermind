@@ -13,7 +13,6 @@ class Board
   end
 
   def generate_color_line(arr)
-    # puts "generate_color_line(#{arr})"
     holder = []
     arr.each do |obj|
       unless obj[:color].nil?
@@ -24,8 +23,6 @@ class Board
   end
 
   def feedback_format(guess_feedback)
-    # puts "\nhere is the guess stuff I got: #{guess_feedback}".salmon
-
     color_num = guess_feedback[:correct_color]
     position_num = guess_feedback[:correct_position]
     non_matching_num = guess_feedback[:non_matches]
@@ -46,11 +43,8 @@ class Board
     @rows.each do |color_obj|
       entire_board += color_line(color_obj[:turn_number], color_obj[:guess], color_obj[:guess_feedback])
       entire_board += "\n\t -----------------------------------".cyan
-      # STDOUT.write color_line(color_obj[:turn_number], color_obj[:guess], color_obj[:guess_feedback])
-      # STDOUT.write "\n\t -----------------------------------".cyan
     end
     print entire_board
-    # STDOUT.write entire_board
   end
 
 end

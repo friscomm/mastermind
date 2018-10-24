@@ -12,10 +12,4 @@ class Player
     puts "Player#{number} please enter your name: "
     @name = gets.chomp
   end
-
-  # def quick_show
-  #   i = "here is the code"
-  #   10.times{ |i| STDOUT.write "\r#{i}"; sleep 1 }
-  # end
-
 end

@@ -115,7 +115,6 @@ class SubmitPattern
   def hide_secret_pattern
     i = 3
     while i > 0
-      # STDOUT.write "\r Pattern will disappear in #{i}"
       print "\rPattern will disappear in #{i}"
       i-=1
       sleep 1
@@ -126,28 +125,20 @@ class SubmitPattern
     puts "Secret pattern saved"
   end
 
-  # def winning_guess?(guess, pattern)
-  #   if guess.join(',') == pattern.join(',')
-  #     puts "You WIN!".salmon
-  #     @turn_number = 12
-  #   end
-  # end
+  def generate_response(guess, pattern)
+    guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
 
-def generate_response(guess, pattern)
-  guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
-
-  guess.each_with_index do |color, i|
-    if pattern[i] == color
-      guess_feedback[:correct_position] += 1
-      guess_feedback[:non_matches] -= 1
-    elsif pattern[i] != color && pattern.include?(color)
-      guess_feedback[:correct_color] += 1
-      guess_feedback[:non_matches] -= 1
+    guess.each_with_index do |color, i|
+      if pattern[i] == color
+        guess_feedback[:correct_position] += 1
+        guess_feedback[:non_matches] -= 1
+      elsif pattern[i] != color && pattern.include?(color)
+        guess_feedback[:correct_color] += 1
+        guess_feedback[:non_matches] -= 1
+      end
     end
+    @stored_feedback = guess_feedback
   end
-  @stored_feedback = guess_feedback
-end
-
 
   def clear_line
     print "\r\033[K"
@@ -164,18 +155,5 @@ end
   def move_cursor_down(n=1)
     print "\033[#{n}B"
   end
-
-  # def print_line
-  #   STDOUT.write line
-  # end
-  #
-  # def show_cursor
-  #   print "\e[?25h" # show cursor
-  # end
-  #
-  # def hide_cursor
-  #   print "\e[?25l" # hide cursor
-  # end
-
-
+  
 end

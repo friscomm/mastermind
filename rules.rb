@@ -1,14 +1,6 @@
 require_relative 'colorize'
 
 class Rules
-  #
-  # def self.is_even?(number)
-  #   if number % 2 == 0
-  #     true
-  #   else
-  #     false
-  #   end
-  # end
 
   def self.invalid_number_of_games?(number)
     if number < 1
@@ -21,7 +13,6 @@ class Rules
       false
     end
   end
-
 
   def self.is_number?(item)
     if item.to_i == 0
@@ -38,5 +29,4 @@ class Rules
       true
     end
   end
-
 end
