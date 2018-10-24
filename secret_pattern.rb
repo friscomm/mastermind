@@ -1,5 +1,3 @@
-
-
 class SecretPattern
 
 attr_reader :secret_pattern

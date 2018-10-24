@@ -1,4 +1,3 @@
-
 require_relative 'colorize'
 require_relative 'player'
 require_relative 'rules'
@@ -7,11 +6,13 @@ require_relative 'board'
 
 class MetaGame
 
-  attr_accessor :current_game, :number_of_games
+  attr_accessor :current_game, :number_of_games, :p1, :p2
 
   def initialize
     @current_game = 1
     @number_of_games = 0
+    @p1 = Player.new(1)
+    @p2 = Player.new(2)
     @banner = "
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    __   __          _                      _           _
@@ -26,21 +27,19 @@ class MetaGame
   end
 
   def start_meta_game
-    p1 = Player.new(1)
-    p2 = Player.new(2)
     print_banner
-    gather_info(p1, p2)
+    gather_info
     feedback_explanation
-    manage_games(p1, p2)
+    manage_games
   end
 
   def print_banner
     puts @banner.flamingo
   end
 
-  def gather_info(p1, p2)
-    p1.name_prompt
-    p2.name_prompt
+  def gather_info
+    @p1.name_prompt
+    @p2.name_prompt
     game_number_prompt
   end
 
@@ -63,61 +62,65 @@ class MetaGame
     @current_game += 1
   end
 
+  def final_game
+    i = 3
+    message = "\rThat's the last game! Tallying score."
+    while i > 0
+      message += "."
+      print message
+      i-=1
+      sleep 1
+    end
+    print "\n"
+    @current_game += 1
+  end
+
   def end_game_message
     if @current_game != @number_of_games
       next_game
     else
-      i = 3
-      message = "\rThat's the last game! Tallying score."
-      while i > 0
-        message += "."
-        print message
-        i-=1
-        sleep 1
-      end
-      print "\n"
-      @current_game += 1
+      final_game
     end
   end
 
-  def get_winner(p1, p2)
-    if p1.score > p2.score
-      p1.name
+  def get_winner
+    if @p1.score > @p2.score
+      @p1.name
     else
-      p2.name
+      @p2.name
     end
   end
 
-  def tie_game?(p1,p2)
-    if p1.score == p2.score
+  def tie_game?
+    if @p1.score == @p2.score
       true
     else
       false
     end
   end
 
-  def game_over(p1,p2)
-    if tie_game?(p1,p2)
+  def game_over
+    if tie_game?
       puts "Tie game....Everybody wins!".mint
     else
-      puts "#{get_winner(p1,p2)} wins!".mint
+      puts "#{get_winner} wins!".mint
     end
   end
 
-  def current_score(p1, p2)
-    puts "#{p1.name}'s points: #{p1.score}"
-    puts "#{p2.name}'s points: #{p2.score}"
+  def current_score
+    puts "#{@p1.name}'s points: #{@p1.score}"
+    puts "#{@p2.name}'s points: #{@p2.score}"
   end
 
-  def manage_games(p1, p2)
+  def manage_games
     while @current_game <= @number_of_games do
       board = Board.new
-      game = Game.new(@current_game, p1, p2, board)
+      game = Game.new(@current_game, @p1, @p2, board)
       game.start_game
       end_game_message
-      current_score(p1, p2)
+      current_score
     end
-    game_over(p1,p2)
+    game_over
   end
 
 end
