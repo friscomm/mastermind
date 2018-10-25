@@ -3,16 +3,15 @@ require_relative 'colorize'
 
 class SubmitPattern
 
-  attr_reader :colors  #:position, :color_index
-  attr_accessor :color_index_base, :stored_colors, :position_base, :marker_template, :stored_feedback
+  attr_reader :stored_colors, :stored_feedback
 
   def initialize
     default = 'default_background'
     @colors = ['salmon_background', 'mint_background', 'lemon_background', 'azure_background', 'magenta_background', 'cyan_background']
     @color_index_base = 0
+    @position_base = 0
     @stored_colors = [{color: default}, {color: default}, {color: default}, {color: default} ]
     @stored_feedback = nil
-    @position_base = 0
     @marker_template = "   "
     # self.position = position_base % 4
     # self.color_index = index % 6
@@ -21,13 +20,10 @@ class SubmitPattern
   def read_keypresses_maker
     loop do
       keypress = $stdin.getch
-
       if keypress == "\e" then
         keypress << STDIN.read_nonblock(3) rescue nil
       end
-
       cycle_colors(keypress)
-
       if keypress == ?\u0003
         break
       elsif keypress == ?\r
@@ -35,7 +31,6 @@ class SubmitPattern
         hide_secret_pattern
         break
       end
-
       keypress
     end
   end
@@ -43,13 +38,10 @@ class SubmitPattern
   def read_keypresses_breaker
     loop do
       keypress = $stdin.getch
-
       if keypress == "\e" then
         keypress << STDIN.read_nonblock(3) rescue nil
       end
-
       cycle_colors(keypress)
-
       if keypress == ?\u0003
         break
       elsif keypress == ?\r
@@ -68,24 +60,10 @@ class SubmitPattern
     num % 6
   end
 
-  def generate_color_line(arr)
-    holder = []
-    arr.each do |obj|
-      unless obj[:color].nil?
-        holder << @marker_template.send(obj[:color])
-      end
-    end
-    holder.join('  ')
-  end
-
-  def color_line
-    "\r\t#{generate_color_line(@stored_colors)}"
-  end
-
   def set_color
     color_index = mod_6(@color_index_base)
     position = mod_4(@position_base)
-    @stored_colors[position][:color] = colors[color_index]
+    @stored_colors[position][:color] = @colors[color_index]
   end
 
   def cycle_colors(keypress)
@@ -115,7 +93,6 @@ class SubmitPattern
   def hide_secret_pattern
     i = 3
     while i > 0
-      # STDOUT.write "\r Pattern will disappear in #{i}"
       print "\rPattern will disappear in #{i}"
       i-=1
       sleep 1
@@ -126,56 +103,45 @@ class SubmitPattern
     puts "Secret pattern saved"
   end
 
-  # def winning_guess?(guess, pattern)
-  #   if guess.join(',') == pattern.join(',')
-  #     puts "You WIN!".salmon
-  #     @turn_number = 12
-  #   end
-  # end
+  def generate_feedback(guess, pattern)
+    guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
 
-def generate_response(guess, pattern)
-  guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
-
-  guess.each_with_index do |color, i|
-    if pattern[i] == color
-      guess_feedback[:correct_position] += 1
-      guess_feedback[:non_matches] -= 1
-    elsif pattern[i] != color && pattern.include?(color)
-      guess_feedback[:correct_color] += 1
-      guess_feedback[:non_matches] -= 1
+    guess.each_with_index do |color, i|
+      if pattern[i] == color
+        guess_feedback[:correct_position] += 1
+        guess_feedback[:non_matches] -= 1
+      elsif pattern[i] != color && pattern.include?(color)
+        guess_feedback[:correct_color] += 1
+        guess_feedback[:non_matches] -= 1
+      end
     end
+    @stored_feedback = guess_feedback
   end
-  @stored_feedback = guess_feedback
-end
 
+  def convert_color_array(arr)
+    holder = []
+    arr.each do |obj|
+      unless obj[:color].nil?
+        holder << @marker_template.send(obj[:color])
+      end
+    end
+    holder.join('  ')
+  end
+
+  def format_color_line
+    "\r\t#{convert_color_array(@stored_colors)}"
+  end
 
   def clear_line
     print "\r\033[K"
   end
 
   def move_cursor_to(value)
-    print "#{color_line}\e[#{value}G"
+    print "#{format_color_line}\e[#{value}G"
   end
 
   def move_cursor_up(n=1)
     print "\033[#{n}A"
   end
-
-  def move_cursor_down(n=1)
-    print "\033[#{n}B"
-  end
-
-  # def print_line
-  #   STDOUT.write line
-  # end
-  #
-  # def show_cursor
-  #   print "\e[?25h" # show cursor
-  # end
-  #
-  # def hide_cursor
-  #   print "\e[?25l" # hide cursor
-  # end
-
 
 end

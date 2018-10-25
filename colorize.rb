@@ -1,5 +1,4 @@
 class String
-  #this will allow me to have colored output on the command line
 
   def colorize(color: 39, background: 49)
     "\e[#{color};#{background}m#{self}\e[0m"
@@ -96,5 +95,5 @@ class String
   def azure_background
     colorize(background: 104)
   end
-
+  
 end
