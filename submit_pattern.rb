@@ -3,8 +3,7 @@ require_relative 'colorize'
 
 class SubmitPattern
 
-  attr_reader :colors  #:position, :color_index
-  attr_accessor :color_index_base, :stored_colors, :position_base, :marker_template, :stored_feedback
+  attr_reader :stored_colors, :stored_feedback
 
   def initialize
     default = 'default_background'
@@ -21,13 +20,10 @@ class SubmitPattern
   def read_keypresses_maker
     loop do
       keypress = $stdin.getch
-
       if keypress == "\e" then
         keypress << STDIN.read_nonblock(3) rescue nil
       end
-
       cycle_colors(keypress)
-
       if keypress == ?\u0003
         break
       elsif keypress == ?\r
@@ -35,7 +31,6 @@ class SubmitPattern
         hide_secret_pattern
         break
       end
-
       keypress
     end
   end
@@ -43,13 +38,10 @@ class SubmitPattern
   def read_keypresses_breaker
     loop do
       keypress = $stdin.getch
-
       if keypress == "\e" then
         keypress << STDIN.read_nonblock(3) rescue nil
       end
-
       cycle_colors(keypress)
-
       if keypress == ?\u0003
         break
       elsif keypress == ?\r
@@ -68,24 +60,10 @@ class SubmitPattern
     num % 6
   end
 
-  def generate_color_line_string(arr)
-    holder = []
-    arr.each do |obj|
-      unless obj[:color].nil?
-        holder << @marker_template.send(obj[:color])
-      end
-    end
-    holder.join('  ')
-  end
-
-  def formatted_color_line
-    "\r\t#{generate_color_line_string(@stored_colors)}"
-  end
-
   def set_color
     color_index = mod_6(@color_index_base)
     position = mod_4(@position_base)
-    @stored_colors[position][:color] = colors[color_index]
+    @stored_colors[position][:color] = @colors[color_index]
   end
 
   def cycle_colors(keypress)
@@ -125,7 +103,7 @@ class SubmitPattern
     puts "Secret pattern saved"
   end
 
-  def generate_response(guess, pattern)
+  def generate_feedback(guess, pattern)
     guess_feedback = {correct_position: 0, correct_color: 0, non_matches: 4}
 
     guess.each_with_index do |color, i|
@@ -140,12 +118,26 @@ class SubmitPattern
     @stored_feedback = guess_feedback
   end
 
+  def convert_color_array(arr)
+    holder = []
+    arr.each do |obj|
+      unless obj[:color].nil?
+        holder << @marker_template.send(obj[:color])
+      end
+    end
+    holder.join('  ')
+  end
+
+  def format_color_line
+    "\r\t#{convert_color_array(@stored_colors)}"
+  end
+
   def clear_line
     print "\r\033[K"
   end
 
   def move_cursor_to(value)
-    print "#{formatted_color_line}\e[#{value}G"
+    print "#{format_color_line}\e[#{value}G"
   end
 
   def move_cursor_up(n=1)

@@ -1,6 +1,7 @@
 class Player
 
-  attr_accessor :score, :name, :number
+  attr_accessor :score
+  attr_reader :name
 
   def initialize(score=0, name=nil, number)
     @score = score
@@ -9,7 +10,7 @@ class Player
   end
 
   def name_prompt
-    puts "Player#{number} please enter your name: "
+    puts "Player#{@number} please enter your name: "
     @name = gets.chomp
   end
 end

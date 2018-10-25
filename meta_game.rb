@@ -6,8 +6,6 @@ require_relative 'board'
 
 class MetaGame
 
-  attr_accessor :current_game, :number_of_games, :p1, :p2
-
   def initialize
     @current_game = 1
     @number_of_games = 0
@@ -99,7 +97,7 @@ class MetaGame
     end
   end
 
-  def game_over
+  def game_over_message
     if tie_game?
       puts "Tie game....Everybody wins!".mint
     else
@@ -108,8 +106,8 @@ class MetaGame
   end
 
   def current_score
-    puts "#{@p1.name}'s points: #{@p1.score}"
-    puts "#{@p2.name}'s points: #{@p2.score}"
+    puts "#{@p1.name}: #{@p1.score} points"
+    puts "#{@p2.name}: #{@p2.score} points"
   end
 
   def manage_games
@@ -120,7 +118,7 @@ class MetaGame
       end_game_message
       current_score
     end
-    game_over
+    game_over_message
   end
 
 end
